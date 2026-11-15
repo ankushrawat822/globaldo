@@ -52,13 +52,13 @@ export async function createTask(formData: FormData) {
   }
 
   const rawData = {
-    title: formData.get('title'),
-    description: formData.get('description'),
-    category: formData.get('category'),
+    title: formData.get('title') || '',
+    description: formData.get('description') || '',
+    category: formData.get('category') || '',
     tags: formData.get('tags') ? JSON.parse(formData.get('tags') as string) : [],
     location_mode: formData.get('location_mode'),
     city: formData.get('city') || null,
-    country: formData.get('country'),
+    country: formData.get('country') || '',
     compensation_type: formData.get('compensation_type'),
     amount: formData.get('amount') ? parseFloat(formData.get('amount') as string) : null,
     currency: formData.get('currency') || 'USD',
@@ -118,13 +118,13 @@ export async function updateTask(taskId: string, formData: FormData) {
   }
 
   const rawData = {
-    title: formData.get('title'),
-    description: formData.get('description'),
-    category: formData.get('category'),
+    title: formData.get('title') || '',
+    description: formData.get('description') || '',
+    category: formData.get('category') || '',
     tags: formData.get('tags') ? JSON.parse(formData.get('tags') as string) : [],
     location_mode: formData.get('location_mode'),
     city: formData.get('city') || null,
-    country: formData.get('country'),
+    country: formData.get('country') || '',
     compensation_type: formData.get('compensation_type'),
     amount: formData.get('amount') ? parseFloat(formData.get('amount') as string) : null,
     currency: formData.get('currency') || 'USD',
