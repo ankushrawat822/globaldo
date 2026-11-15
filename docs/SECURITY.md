@@ -1,0 +1,13 @@
+# Security & Privacy Checklist
+- RLS on every table; one RLS test per policy.
+- Contact data (`contact_methods`, `connection_shares`) never appears in public queries, joins, views, logs, errors, or analytics.
+- Service-role key server-only.
+- Zod-validate every Server Action input; mirror with DB CHECK constraints.
+- Rate limits: tasks 5/day, offers 20/day, reports 10/day.
+- Escape user text; render markdown-lite with a safe renderer (no raw HTML).
+- Soft-detect and reject emails/phones/links in public text.
+- Security headers (CSP, X-Frame-Options, Referrer-Policy) in next.config.
+- Honeypot + rate limit on forms; add Turnstile/hCaptcha only if spam appears.
+- Account deletion removes profile, tasks, offers, contacts, shares.
+- Privacy policy states what is stored; contacts go only to the counterpart you choose.
+- Never log tokens or PII. Run `npm audit` before release.
