@@ -50,10 +50,12 @@ export async function updateSession(request: NextRequest) {
 
   if (
     !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
+    (request.nextUrl.pathname.startsWith('/my') ||
+     request.nextUrl.pathname.startsWith('/post') ||
+     request.nextUrl.pathname.startsWith('/settings') ||
+     request.nextUrl.pathname.startsWith('/admin'))
   ) {
-    // no user, potentially respond by redirecting the user to the login page
+    // no user, and trying to access a protected route, redirect to login
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
