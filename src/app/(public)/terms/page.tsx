@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function TermsPage() {
   return (
     <div className="max-w-2xl mx-auto py-12">

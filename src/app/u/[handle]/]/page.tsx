@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { Calendar, MapPin, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import Image from 'next/image'
 import { formatDistanceToNow, format } from 'date-fns'
 
 interface ProfileData {
@@ -124,9 +125,11 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       <div className="flex flex-col md:flex-row items-start md:items-center gap-6 p-6 border border-stone rounded-lg">
         <div className="relative w-24 h-24 flex-shrink-0">
           {profile.avatar_url ? (
-            <img
+            <Image
               src={profile.avatar_url}
               alt={profile.display_name}
+              width={96}
+              height={96}
               className="w-full h-full rounded-lg object-cover border border-stone"
             />
           ) : (

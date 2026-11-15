@@ -1,3 +1,6 @@
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+
 export default function AboutPage() {
   return (
     <div className="max-w-3xl mx-auto py-12">
