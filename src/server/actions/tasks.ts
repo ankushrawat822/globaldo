@@ -6,18 +6,31 @@ import { revalidatePath } from 'next/cache'
 import { detectContactInfo } from '@/lib/detect-contact'
 
 const taskSchema = z.object({
-  title: z.string().min(5).max(120),
-  description: z.string().min(20).max(2000),
-  category: z.string().min(1),
-  tags: z.array(z.string().max(30)).max(5).default([]),
-  location_mode: z.enum(['remote', 'in_person']),
-  city: z.string().max(100).optional(),
-  country: z.string().length(2),
-  compensation_type: z.enum(['none', 'paid', 'swap']),
-  amount: z.number().positive().max(1000000).optional(),
-  currency: z.string().length(3).default('USD'),
-  deadline: z.string().datetime().optional().nullable(),
-  helpers_needed: z.number().int().min(1).max(5).default(1),
+  title: z.preprocess((val) => (val === null || val === undefined ? '' : String(val)), z.string().min(5).max(120)),
+  description: z.preprocess((val) => (val === null || val === undefined ? '' : String(val)), z.string().min(20).max(2000)),
+  category: z.preprocess((val) => (val === null || val === undefined ? '' : String(val)), z.string().min(1)),
+  tags: z.preprocess(
+    (val) => {
+      if (!val) return [];
+      if (Array.isArray(val)) return val;
+      try { return JSON.parse(String(val)); } catch { return []; }
+    },
+    z.array(z.string().max(30)).max(5).default([])
+  ),
+  location_mode: z.preprocess((val) => String(val), z.enum(['remote', 'in_person'])),
+  city: z.preprocess((val) => (val === null || val === undefined ? null : String(val)), z.string().max(100).optional().nullable()),
+  country: z.preprocess((val) => (val === null || val === undefined ? '' : String(val)), z.string().length(2)),
+  compensation_type: z.preprocess((val) => String(val), z.enum(['none', 'paid', 'swap'])),
+  amount: z.preprocess(
+    (val) => (val === null || val === undefined || val === '' ? undefined : parseFloat(String(val))),
+    z.number().positive().max(1000000).optional()
+  ),
+  currency: z.preprocess((val) => (val === null || val === undefined ? 'USD' : String(val)), z.string().length(3).default('USD')),
+  deadline: z.preprocess((val) => (val === null || val === undefined || val === '' ? null : String(val)), z.string().datetime().optional().nullable()),
+  helpers_needed: z.preprocess(
+    (val) => (val === null || val === undefined ? 1 : parseInt(String(val)) || 1),
+    z.number().int().min(1).max(5).default(1)
+  ),
 })
 
 export async function createTask(formData: FormData) {
@@ -52,18 +65,18 @@ export async function createTask(formData: FormData) {
   }
 
   const rawData = {
-    title: formData.get('title') || '',
-    description: formData.get('description') || '',
-    category: formData.get('category') || '',
-    tags: formData.get('tags') ? JSON.parse(formData.get('tags') as string) : [],
-    location_mode: formData.get('location_mode') || 'remote',
-    city: formData.get('city') || null,
-    country: formData.get('country') || '',
-    compensation_type: formData.get('compensation_type') || 'none',
-    amount: formData.get('amount') ? parseFloat(formData.get('amount') as string) : null,
-    currency: formData.get('currency') || 'USD',
-    deadline: formData.get('deadline') || null,
-    helpers_needed: parseInt(formData.get('helpers_needed') as string) || 1,
+    title: formData.get('title'),
+    description: formData.get('description'),
+    category: formData.get('category'),
+    tags: formData.get('tags'),
+    location_mode: formData.get('location_mode'),
+    city: formData.get('city'),
+    country: formData.get('country'),
+    compensation_type: formData.get('compensation_type'),
+    amount: formData.get('amount'),
+    currency: formData.get('currency'),
+    deadline: formData.get('deadline'),
+    helpers_needed: formData.get('helpers_needed'),
   }
 
   const validated = taskSchema.safeParse(rawData)
@@ -118,18 +131,18 @@ export async function updateTask(taskId: string, formData: FormData) {
   }
 
   const rawData = {
-    title: formData.get('title') || '',
-    description: formData.get('description') || '',
-    category: formData.get('category') || '',
-    tags: formData.get('tags') ? JSON.parse(formData.get('tags') as string) : [],
-    location_mode: formData.get('location_mode') || 'remote',
-    city: formData.get('city') || null,
-    country: formData.get('country') || '',
-    compensation_type: formData.get('compensation_type') || 'none',
-    amount: formData.get('amount') ? parseFloat(formData.get('amount') as string) : null,
-    currency: formData.get('currency') || 'USD',
-    deadline: formData.get('deadline') || null,
-    helpers_needed: parseInt(formData.get('helpers_needed') as string) || 1,
+    title: formData.get('title'),
+    description: formData.get('description'),
+    category: formData.get('category'),
+    tags: formData.get('tags'),
+    location_mode: formData.get('location_mode'),
+    city: formData.get('city'),
+    country: formData.get('country'),
+    compensation_type: formData.get('compensation_type'),
+    amount: formData.get('amount'),
+    currency: formData.get('currency'),
+    deadline: formData.get('deadline'),
+    helpers_needed: formData.get('helpers_needed'),
   }
 
   const validated = taskSchema.safeParse(rawData)
